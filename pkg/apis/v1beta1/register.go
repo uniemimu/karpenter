@@ -35,6 +35,8 @@ var (
 			&NodePoolList{},
 			&NodeClaim{},
 			&NodeClaimList{},
+			&InstanceTypeExtension{},
+			&InstanceTypeExtensionList{},
 		)
 		metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 		return nil

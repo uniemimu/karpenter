@@ -274,6 +274,8 @@ func BuildNodePoolMap(ctx context.Context, kubeClient client.Client, cloudProvid
 		if len(nodePoolInstanceTypes) == 0 {
 			continue
 		}
+
+		provisioning.GetInstanceTypeExtender(ctx, kubeClient).AddInstanceTypeExtensions(ctx, nodePoolInstanceTypes, np)
 		nodePoolToInstanceTypesMap[np.Name] = map[string]*cloudprovider.InstanceType{}
 		for _, it := range nodePoolInstanceTypes {
 			nodePoolToInstanceTypesMap[np.Name][it.Name] = it

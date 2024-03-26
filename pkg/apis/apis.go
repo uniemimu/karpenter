@@ -42,8 +42,11 @@ var (
 	NodePoolCRD []byte
 	//go:embed crds/karpenter.sh_nodeclaims.yaml
 	NodeClaimCRD []byte
-	CRDs         = []*v1.CustomResourceDefinition{
+	//go:embed crds/karpenter.sh_extensions.yaml
+	ExtensionsCRD []byte
+	CRDs          = []*v1.CustomResourceDefinition{
 		lo.Must(functional.Unmarshal[v1.CustomResourceDefinition](NodePoolCRD)),
 		lo.Must(functional.Unmarshal[v1.CustomResourceDefinition](NodeClaimCRD)),
+		lo.Must(functional.Unmarshal[v1.CustomResourceDefinition](ExtensionsCRD)),
 	}
 )
