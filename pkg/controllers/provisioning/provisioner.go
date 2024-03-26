@@ -216,9 +216,10 @@ func (p *Provisioner) NewScheduler(ctx context.Context, pods []*v1.Pod, stateNod
 
 	instanceTypes := map[string][]*cloudprovider.InstanceType{}
 	domains := map[string]sets.Set[string]{}
-	for _, nodePool := range nodePoolList.Items {
+	for i := range nodePoolList.Items {
+		nodePool := &nodePoolList.Items[i]
 		// Get instance type options
-		instanceTypeOptions, err := p.cloudProvider.GetInstanceTypes(ctx, lo.ToPtr(nodePool))
+		instanceTypeOptions, err := p.cloudProvider.GetInstanceTypes(ctx, nodePool)
 		if err != nil {
 			// we just log an error and skip the provisioner to prevent a single mis-configured provisioner from stopping
 			// all scheduling
@@ -229,6 +230,8 @@ func (p *Provisioner) NewScheduler(ctx context.Context, pods []*v1.Pod, stateNod
 			logging.FromContext(ctx).With("nodepool", nodePool.Name).Info("skipping, no resolved instance types found")
 			continue
 		}
+
+		GetInstanceTypeExtender(ctx).AddInstanceTypeExtensions(ctx, instanceTypeOptions, nodePool)
 		instanceTypes[nodePool.Name] = append(instanceTypes[nodePool.Name], instanceTypeOptions...)
 
 		// Construct Topology Domains
